@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InovaEdu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('image/fundologin.png') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            width: 350px;
+            text-align: center;
+        }
+
+        h2 {
+            margin: 10px 0;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="password"] {
+            width: 90%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .actions {
+            margin-top: 10px;
+        }
+
+        .actions a {
+            text-decoration: none;
+            color: #007BFF;
+            font-size: 0.9em;
+            margin: 0 5px;
+        }
+
+        .actions a:hover {
+            text-decoration: underline;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            border: none;
+            color: white;
+            border-radius: 15px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .main-container {
+            display: none;
+            text-align: center;
+            width: 80%;
+            height: 80%;
+            margin: auto;
+        }
+
+        .main-buttons {
+            margin-top: 20px;
+        }
+
+        .content {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 123, 255, 0.8);
+            z-index: 10;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .content-box {
+            background-color: white;
+            padding: 30px;
+            border-radius: 20px;
+            width: 80%;
+            height: 80%;
+            max-width: 600px;
+            max-height: 600px;
+            overflow-y: auto;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .activity-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Estilo para o botão "Sair" na lateral */
+        .sair {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            background-color: #ff4c4c; /* Vermelho para destaque */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .sair:hover {
+            background-color: #d43f3f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="login-form">
+            <img src="image/3q0mj0gl.png" alt="Logo InovaEdu" class="logo">
+            <h2>InovaEdu</h2>
+            <form id="login" onsubmit="return handleLogin(event);">
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="senha" placeholder="Senha" required>
+                <button type="submit">Entrar</button>
+            </form>
+            <div class="actions">
+                <a href="#">Esqueceu a senha?</a>
+                <a href="#" onclick="toggleForms()">Cadastrar-se</a>
+            </div>
+        </div>
+
+        <div id="cadastro-form" class="hidden">
+            <h2>Cadastrar-se</h2>
+            <form action="#" method="post">
+                <input type="text" name="nome" placeholder="Nome" required>
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="tel" name="telefone" placeholder="Telefone" required>
+                <input type="text" name="profissao" placeholder="Profissão" required>
+                <input type="text" name="endereco" placeholder="Endereço" required>
+                <button type="submit">Cadastrar</button>
+            </form>
+            <div class="actions">
+                <a href="#" onclick="toggleForms()">Já tem uma conta? Faça login</a>
+            </div>
+        </div>
+
+        <div id="main-container" class="main-container">
+            <h2 id="welcome-message">Olá, Professor</h2>
+            <div class="main-buttons">
+                <button onclick="showAddClass()">Cadastro de Turma</button>
+                <button onclick="showAddActivity()">Cadastro de Atividade</button>
+            </div>
+        </div>
+
+        <button class="sair" onclick="logout()">Sair</button>
+    </div>
+
+    <div class="content" id="content">
+        <div class="content-box" id="content-box">
+            <!-- Conteúdo dinâmico será inserido aqui -->
+        </div>
+    </div>
+
+    <script>
+        let turmas = [];
+        let atividades = [];
+
+        function handleLogin(event) {
+            event.preventDefault();
+            document.getElementById('login-form').classList.add('hidden');
+            document.getElementById('main-container').style.display = 'block';
+            document.getElementById('welcome-message').innerText = 'Olá, Professor';
+        }
+
+        function toggleForms() {
+            const loginForm = document.getElementById('login-form');
+            const cadastroForm = document.getElementById('cadastro-form');
+            loginForm.classList.toggle('hidden');
+            cadastroForm.classList.toggle('hidden');
+        }
+
+        function logout() {
+            document.getElementById('main-container').style.display = 'none';
+            document.getElementById('login-form').classList.remove('hidden');
+            document.getElementById('cadastro-form').classList.add('hidden');
+        }
+
+        function showAddClass() {
+            const contentBox = document.getElementById('content-box');
+            contentBox.innerHTML = `
+                <h3>Cadastro de Turma</h3>
+                <div class="form-group">
+                    <input type="text" id="turma-nome" placeholder="Nome da Turma" required>
+                </div>
+                <button onclick="addClass()">Adicionar</button>
+                <button onclick="goBack()">Voltar</button>
+            `;
+            document.getElementById('content').style.display = 'flex';
+        }
+
+        function addClass() {
+            const nome = document.getElementById('turma-nome').value;
+            if (nome) {
+                turmas.push({ nome, alunos: [] });
+                alert(`Turma '${nome}' adicionada com sucesso!`);
+                document.getElementById('content').style.display = 'none';
+            }
+        }
+
+        function showAddActivity() {
+            const contentBox = document.getElementById('content-box');
+            contentBox.innerHTML = `
+                <h3>Cadastro de Atividade</h3>
+                <div class="form-group">
+                    <input type="text" id="atividade-nome" placeholder="Nome da Atividade" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="atividade-turma" placeholder="Turma" required>
+                </div>
+                <button onclick="addActivity()">Adicionar</button>
+                <button onclick="goBack()">Voltar</button>
+                <h4>Atividades Cadastradas</h4>
+                <table>
+                    <tr>
+                        <th>Nome da Atividade</th>
+                        <th>Turma</th>
+                        <th
+                        <th>Ações</th>
+                    </tr>
+                    ${atividades.map((atividade, index) => `
+                    <tr>
+                        <td>${atividade.nome}</td>
+                        <td>${atividade.turma}</td>
+                        <td>
+                            <button onclick="editActivity(${index})">Editar</button>
+                            <button onclick="deleteActivity(${index})">Excluir</button>
+                        </td>
+                    </tr>`).join('')}
+                </table>
+            `;
+            document.getElementById('content').style.display = 'flex';
+        }
+
+        function addActivity() {
+            const nome = document.getElementById('atividade-nome').value;
+            const turma = document.getElementById('atividade-turma').value;
+            if (nome && turma) {
+                atividades.push({ nome, turma });
+                alert(`Atividade '${nome}' cadastrada com sucesso!`);
+                document.getElementById('atividade-nome').value = '';
+                document.getElementById('atividade-turma').value = '';
+                showAddActivity(); // Refresh the activity list
+            }
+        }
+
+        function editActivity(index) {
+            const atividade = atividades[index];
+            const contentBox = document.getElementById('content-box');
+            contentBox.innerHTML = `
+                <h3>Editar Atividade</h3>
+                <div class="form-group">
+                    <input type="text" id="atividade-nome" value="${atividade.nome}" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="atividade-turma" value="${atividade.turma}" required>
+                </div>
+                <button onclick="saveEditedActivity(${index})">Salvar</button>
+                <button onclick="goBack()">Voltar</button>
+            `;
+            document.getElementById('content').style.display = 'flex';
+        }
+
+        function saveEditedActivity(index) {
+            const nome = document.getElementById('atividade-nome').value;
+            const turma = document.getElementById('atividade-turma').value;
+            if (nome && turma) {
+                atividades[index] = { nome, turma };
+                alert(`Atividade '${nome}' atualizada com sucesso!`);
+                document.getElementById('content').style.display = 'none';
+            }
+        }
+
+        function deleteActivity(index) {
+            if (confirm("Tem certeza que deseja excluir esta atividade?")) {
+                atividades.splice(index, 1);
+                alert("Atividade excluída com sucesso!");
+                showAddActivity(); // Refresh the activity list
+            }
+        }
+
+        function goBack() {
+            document.getElementById('content').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

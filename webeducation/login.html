@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InovaEdu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('image/fundologin.png') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            width: 350px;
+            text-align: center;
+        }
+
+        h2 {
+            margin: 10px 0;
+        }
+
+        img.logo {
+            width: 150px; /* Ajuste o tamanho da logo conforme necessário */
+            margin-bottom: 8px; /* Mantido */
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="password"] {
+            width: 90%; /* Ajustado para 90% da largura do container */
+            padding: 10px; /* Mantido */
+            margin: 5px 0; /* Mantido */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .actions {
+            margin-top: 10px;
+        }
+
+        .actions a {
+            text-decoration: none;
+            color: #007BFF;
+            font-size: 0.9em;
+            margin: 0 5px; /* Adicionado para espaçamento entre os links */
+        }
+
+        .actions a:hover {
+            text-decoration: underline;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px; /* Mantido */
+            background-color: #007BFF;
+            border: none;
+            color: white;
+            border-radius: 15px; /* Aumentado para um arredondamento maior */
+            cursor: pointer;
+            margin-top: 10px; /* Mantido */
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .hidden {
+            display: none; /* Esconde elementos */
+        }
+
+        .main-container {
+            display: none; /* Inicialmente escondido */
+            text-align: center;
+        }
+
+        .main-buttons {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around; /* Para espaçamento igual */
+        }
+
+        .icon-button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 5px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100px; /* Largura fixa para os ícones */
+            text-align: center;
+        }
+
+        .icon-button:hover {
+            background-color: #0056b3;
+        }
+
+        .icon-button img {
+            width: 40px; /* Ajuste o tamanho do ícone conforme necessário */
+            margin-bottom: 5px; /* Espaçamento entre o ícone e o texto */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="login-form">
+            <img src="image/3q0mj0gl.png" alt="Logo InovaEdu" class="logo"> <!-- Substitua pelo caminho da sua logo -->
+            <h2>InovaEdu</h2>
+            <form id="login" onsubmit="return handleLogin(event);">
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="senha" placeholder="Senha" required>
+                <button type="submit">Entrar</button>
+            </form>
+            <div class="actions">
+                <a href="#">Esqueceu a senha?</a>     
+                <a href="#" onclick="toggleForms()">Cadastrar-se</a>
+            </div>
+        </div>
+
+        <div id="cadastro-form" class="hidden">
+            <h2>Cadastrar-se</h2>
+            <form action="#" method="post">
+                <input type="text" name="nome" placeholder="Nome" required>
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="tel" name="telefone" placeholder="Telefone" required>
+                <input type="text" name="profissao" placeholder="Profissão" required>
+                <input type="text" name="endereco" placeholder="Endereço" required>
+                <button type="submit">Cadastrar</button>
+            </form>
+            <div class="actions">
+                <a href="#" onclick="toggleForms()">Já tem uma conta? Faça login</a>
+            </div>
+        </div>
+
+        <div id="main-container" class="main-container">
+            <h2 id="welcome-message"></h2>
+            <div class="main-buttons">
+                <button class="icon-button" onclick="listClasses()">
+                    <img src="image/list-icon.png" alt="Listar Turmas"> <!-- Substitua pelo caminho do ícone -->
+                    Listar Turmas
+                </button>
+                <button class="icon-button" onclick="showAddClass()">
+                    <img src="image/add-icon.png" alt="Adicionar Turma"> <!-- Substitua pelo caminho do ícone -->
+                    Adicionar Turma
+                </button>
+                <button class="icon-button" onclick="deleteClass()">
+                    <img src="image/delete-icon.png" alt="Excluir Turma"> <!-- Substitua pelo caminho do ícone -->
+                    Excluir Turma
+                </button>
+                <button class="icon-button" onclick="showActivities()">
+                    <img src="image/activities-icon.png" alt="Atividades"> <!-- Substitua pelo caminho do ícone -->
+                    Atividades
+                </button>
+                <button class="icon-button" onclick="listActivities()">
+                    <img src="image/list-activities-icon.png" alt="Listar Atividades"> <!-- Substitua pelo caminho do ícone -->
+                    Listar Atividades
+                </button>
+                <button class="icon-button" onclick="showAddActivity()">
+                    <img src="image/add-activity-icon.png" alt="Adicionar Atividade"> <!-- Substitua pelo caminho do ícone -->
+                    Adicionar Atividade
+                </button>
+                <button class="icon-button" onclick="logout()">
+                    <img src="image/logout-icon.png" alt="Sair"> <!-- Substitua pelo caminho do ícone -->
+                    Sair
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let userName = ""; // Variável para armazenar o nome do usuário
+
+        function handleLogin(event) {
+            event.preventDefault(); // Impede o envio do formulário
+            const formData = new FormData(event.target);
+            userName = formData.get('nome') || "Professor"; // Usa o nome se disponível, caso contrário usa "Professor"
+            document.getElementById("login-form").style.display = "none"; // Esconde o formulário de login
+            document.getElementById("main-container").style.display = "block"; // Mostra a tela principal
+            document.getElementById("welcome-message").innerText = `Olá, ${userName}`; // Atualiza a mensagem de boas-vindas
+        }
+
+        function toggleForms() {
+            const loginForm = document.getElementById("login-form");
+            const cadastroForm = document.getElementById("cadastro-form");
+            loginForm.classList.toggle("hidden");
+            cadastroForm.classList.toggle("hidden");
+        }
+
+        function listClasses() {
+            alert("Listar turmas do professor (funcionalidade a ser implementada).");
+        }
+
+        function showAddClass() {
+            alert("Cadastro de turma (funcionalidade a ser implementada).");
+        }
+
+        function deleteClass() {
+            alert("Exclusão de turma (funcionalidade a ser implementada).");
+        }
+
+        function showActivities() {
+            alert("Tela de atividades da turma (funcionalidade a ser implementada).");
+        }
+
+        function listActivities() {
+            alert("Listar atividades da turma (funcionalidade a ser implementada).");
+        }
+
+        function showAddActivity() {
+            alert("Cadastro de atividade para a turma (funcionalidade a ser implementada).");
+        }
+
+        function logout() {
+            alert("Você foi desconectado."); // Mensagem de logout
+            // Para realmente fazer logout, você pode adicionar lógica adicional aqui.
+            window.location.reload(); // Reinicia a página
+        }
+    </script>
+</body>
+</html>
